@@ -24,15 +24,18 @@ module Api
       end
 
       def destroy
-        @player.destroy
-        render json: { status: 'SUCCESS', message: 'Deleted the post', data: @player }
+        if @player.find(params[:id])
+          render json: { status: 'SUCCESS', message: 'Deleted the player', data: @player }
+        else
+          render json: { status: 'ERROR', message: 'Not deleted', data: @player.errors }
+        end
       end
 
       def update
         if @player.update(player_params)
           render json: { status: 'SUCCESS', message: 'Updated the player', data: @player }
         else
-          render json: { status: 'SUCCESS', message: 'Not updated', data: @player.errors }
+          render json: { status: 'ERROR', message: 'Not updated', data: @player.errors }
         end
       end
 
@@ -41,7 +44,7 @@ module Api
       end
 
       def player_params
-        params.require(:player).permit(:name)
+        params.require(:player).permit(:name, :id)
       end
     end
   end

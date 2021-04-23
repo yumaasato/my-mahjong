@@ -99,10 +99,10 @@ const Player = () => {
     }
   };
 
-    // Playerを削除後Rails側にリクエストを送る
+  // Playerを削除後Rails側にリクエストを送る
   const handleDeletePlayer = () => {
     const request = async () => {
-      deletePlayer;
+      await deletePlayer;
       const auth = getAuth();
       auth.currentUser;
       if (auth && auth.currentUser) {
@@ -111,7 +111,7 @@ const Player = () => {
           name: name
         }
         try {
-          await axios.delete('api/v1/players/{id}', {
+          await axios.delete('api/v1/players', {
             headers: {
               'Authorization': `Basic ${token}`
             }
