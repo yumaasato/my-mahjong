@@ -1,3 +1,6 @@
 # history
 .history
 .env
+
+# data/redis
+data
