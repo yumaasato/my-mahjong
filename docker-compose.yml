@@ -1,6 +1,15 @@
 version: '3'
 
 services:
+  redis:
+    image: redis:6.2
+    command: ["redis-server"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - "./data/redis:/data"
+    command: redis-server --appendonly yes ##MySQLとredis-serverの永続化
+
   db:
     image: mysql:8.0.23
     container_name: api-container
@@ -23,10 +32,15 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    links:
+      - db
+      - redis
     volumes:
       - ./m-api:/app
       - bundle_path:/bundle
     command: /bin/sh -c "rm -f /app/tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    environment:
+      REDIS_URL: redis://redis:6379
 
   front:
     build:
