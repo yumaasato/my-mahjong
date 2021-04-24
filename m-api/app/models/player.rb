@@ -1,4 +1,5 @@
 class Player < ApplicationRecord
-  has_many :game, dependent: :destroy
+  has_many :games, dependent: :destroy
   validates :name, presence: true
+  belongs_to :user
 end

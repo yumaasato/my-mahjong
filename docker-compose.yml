@@ -24,6 +24,7 @@ services:
       - ./mysql-confd:/etc/mysql/conf.d
 
   api:
+    stdin_open: true
     tty: true
     depends_on:
       - db

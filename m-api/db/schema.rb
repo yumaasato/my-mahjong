@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_09_061643) do
+ActiveRecord::Schema.define(version: 2021_04_24_143855) do
 
   create_table "game_grades", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "game_id", null: false
@@ -30,6 +30,8 @@ ActiveRecord::Schema.define(version: 2021_04_09_061643) do
     t.integer "rank_point"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "player_id", null: false
+    t.index ["player_id"], name: "index_games_on_player_id"
   end
 
   create_table "players", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -53,5 +55,6 @@ ActiveRecord::Schema.define(version: 2021_04_09_061643) do
   add_foreign_key "game_grades", "games"
   add_foreign_key "game_grades", "players"
   add_foreign_key "game_grades", "users"
+  add_foreign_key "games", "players"
   add_foreign_key "players", "users"
 end

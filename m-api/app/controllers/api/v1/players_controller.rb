@@ -1,7 +1,7 @@
 module Api
   module V1
     class PlayersController < ApplicationController
-      before_action :set_player, only: [:show, :update, :destroy]
+      before_action :set_player, only: %i[show update destroy]
 
       def index
         players = Player.order(created_at: :desc)
@@ -13,18 +13,19 @@ module Api
       end
 
       def create
-        player = Player.new(player_params)
+        @player = Player.new(player_params)
         # playerにはuser_idが必要なのでcurrent_user.idを振り当てる
-        player.user_id = current_user.id
-        if player.save
-          render json: { status: 'SUCCESS', data: player }
+        @player.user_id = current_user.id
+        if @player.save
+          render json: { status: 'SUCCESS', data: @player }
         else
-          render json: { status: 'ERROR', data: player.errors }
+          render json: { status: 'ERROR', data: @player.errors }
         end
       end
 
       def destroy
-        if @player.find(params[:id])
+        # binding.irb
+        if @player.destroy
           render json: { status: 'SUCCESS', message: 'Deleted the player', data: @player }
         else
           render json: { status: 'ERROR', message: 'Not deleted', data: @player.errors }
@@ -44,7 +45,7 @@ module Api
       end
 
       def player_params
-        params.require(:player).permit(:name, :id)
+        params.require(:player).permit(:name)
       end
     end
   end

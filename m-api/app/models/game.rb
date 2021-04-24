@@ -1,8 +1,7 @@
 class Game < ApplicationRecord
-  validates :players, presence: true, length: { is: 3 }
-  validates :score, presence: true, dependent: destroy
-  validates :point, presence: true, dependent: destroy
-  has_many :game_grades
+  validates :players, length: { is: 3 }
+  validates :score, presence: true
+  has_many :game_grades, dependent: :destroy
 
   # def self_point
   #   @score = [20000, 30000, 10000, 40000]
