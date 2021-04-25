@@ -87,13 +87,13 @@ const Player = () => {
   }
 
   //OKとキャンセルのどちらかを選択させる
-  const deletePlayer = index => {
+  const deletePlayer = (id) => {
     const result = window.confirm(
       `playerを本当に削除していいですか？`
     );
     if (result) {
-      const newPlayers = players.filter((player, playerIndex) => {
-        return index !== playerIndex;
+      const newPlayers = players.filter(player => {
+        return player.id !== id;
       });
       setPlayers(newPlayers);
     }
@@ -101,9 +101,8 @@ const Player = () => {
 
   // Playerを削除後Rails側にリクエストを送る
   const handleDeletePlayer = (id) => {
-
     const request = async () => {
-      await deletePlayer;
+      await deletePlayer(id);
       const auth = getAuth();
       auth.currentUser;
       if (auth && auth.currentUser) {
@@ -124,6 +123,8 @@ const Player = () => {
     }
     request();
   }
+  console.log(player.name)
+  console.log(name)
 
   return (
     <div>
