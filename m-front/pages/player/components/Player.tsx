@@ -17,7 +17,7 @@ const Player = () => {
   const [loading, setLoading] = useState(true);
   const player = useSelector(selectPlayer);
 
-  // playerのAPIからデータを取得
+  // リロード時にplayerのAPIからデータを取得
   const fetchData = async () => {
     const auth = getAuth();
     auth.currentUser;
@@ -34,6 +34,7 @@ const Player = () => {
           const data = await response.json();
           // const [item] とすると配列が外れるので要注意
           const item = data.data
+          console.log("item:", item)
           setPlayers(item)
           setLoading(false)
         } catch (error) {
@@ -55,25 +56,29 @@ const Player = () => {
       alert("文字を入力してください");
       return;
     }
-    console.log(name)
-    setPlayers([...players, name])
+    // setPlayers([...players, name])
     setName("")
+
   }
 
   // Playerを追加後Rails側にリクエストを送る
   const handleAddPlayer = () => {
     const request = async () => {
+      console.log("1")
       await addPlayer();
       const auth = getAuth();
+      console.log("2")
       auth.currentUser;
       // 認証をかける
       if (auth && auth.currentUser) {
+        console.log("3")
         const token = await auth.currentUser.getIdToken(true);
+        console.log("4")
         const player = {
           name: name
         }
         try {
-          await axios.post('api/v1/players', player, {
+          const response = await axios.post('api/v1/players', player, {
             headers: {
               'Authorization': `Basic ${token}`
             }
@@ -82,6 +87,8 @@ const Player = () => {
           console.log(error);
         }
       }
+      // データを
+      fetchData();
     }
     request();
   }
@@ -96,6 +103,7 @@ const Player = () => {
         return player.id !== id;
       });
       setPlayers(newPlayers);
+
     }
   };
 
@@ -123,8 +131,6 @@ const Player = () => {
     }
     request();
   }
-  console.log(player.name)
-  console.log(name)
 
   return (
     <div>
@@ -134,13 +140,13 @@ const Player = () => {
           variant="outlined"
           margin="normal"
           required
-          id="playername"
-          label="playername"
-          name="playername"
-          autoComplete="playername"
+          id="name"
+          label="name"
+          name="name"
+          autoComplete="name"
           autoFocus
-          // formの入力値をtmpplayerで持っておく
-          onChange={e => setName(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
+          // formの入力値をnameで持っておく
           value={name}
         />
         <Button
@@ -152,6 +158,7 @@ const Player = () => {
           プレイヤーを作成する
         </Button>
       </div>
+
       <ul>
         {players.map((player) => {
           return <li key={player.id}>
@@ -166,6 +173,13 @@ const Player = () => {
           </li>;
         })}
       </ul>
+      <Button
+          variant="contained"
+          color="primary"
+          className="btn btn-primary"
+        >
+          対局を作成する
+        </Button>
       <style>{`
         h1 {
           text-align: center;
